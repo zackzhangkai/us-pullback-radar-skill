@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股回撤风险检查 · 2026-09-29</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --ink:#1f2937; --muted:#6b7280; --bg:#f8fafc; --card:#ffffff;
+    --red:#c2410c; --green:#15803d; --amber:#b45309; --line:#e5e7eb;
+    --accent:#1e40af; --accent-soft:#eff6ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;padding:32px 16px;}
+  .wrap{max-width:960px;margin:0 auto;}
+  h1{font-size:26px;margin-bottom:4px;}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:24px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .card h2{font-size:17px;margin-bottom:12px;padding-left:10px;border-left:4px solid var(--accent);}
+  .tldr{background:linear-gradient(135deg,#eff6ff,#f0f9ff);border:1px solid #bfdbfe;}
+  .tldr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 4px;}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-align:center;}
+  .kpi .v{font-size:22px;font-weight:700;}
+  .kpi .l{font-size:12px;color:var(--muted);}
+  .level{display:inline-block;padding:2px 14px;border-radius:999px;font-weight:700;font-size:14px;}
+  .lv-mid{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;}
+  .sig{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);}
+  .sig:last-child{border-bottom:none;}
+  .dot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:8px;}
+  .d-red{background:#dc2626;} .d-amber{background:#f59e0b;} .d-green{background:#16a34a;}
+  .sig b{flex:none;width:170px;}
+  .sig .desc{color:#374151;font-size:14px;}
+  .sig .src{display:block;color:var(--muted);font-size:12px;margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0;}
+  th{background:#f1f5f9;text-align:left;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap;}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .up{color:var(--red);font-weight:600;} .down{color:var(--green);font-weight:600;}
+  .chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0;}
+  .chain .node{background:var(--accent-soft);border:1px solid #bfdbfe;color:#1e3a8a;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;}
+  .chain .arr{color:#94a3b8;font-size:16px;font-weight:700;}
+  .note{font-size:12px;color:var(--muted);}
+  .cond{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-top:12px;font-size:14px;}
+  .disclaim{margin-top:28px;padding:14px 18px;background:#f1f5f9;border-radius:10px;font-size:12.5px;color:#475569;}
+  #chartV,#chartY,#chartFed{width:100%;height:340px;}
+  @media(max-width:640px){.tldr-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>美股回撤风险检查报告</h1>
+  <div class="sub">检查时间：2026-09-29 22:00（北京时间）· 美股盘中 · 覆盖标的：VOO / QQQM（价格口径，不含股息）</div>
+
+  <!-- 结论卡 -->
+  <div class="card tldr">
+    <h2>结论：风险信号已共振，触发本次提醒</h2>
+    <p style="font-size:14.5px;">
+      按你设定的规则（多个风险信号共振才提醒），当前 <b>4 个独立信号同时亮灯</b>：油价冲高、10年期美债收益率创 2007 年以来新高、Fed 加息预期逼近满价、市场广度恶化到互联网泡沫以来极端水平。
+      但指数层面仍是<b>浅回撤</b>——VOO/QQQM 距历史高点仅约 1.4%~1.6%，尚在正常波动区间。
+      综合判断：<span class="level lv-mid">回撤风险等级：中</span>&nbsp;处于"风险升级早期"，指数尚未确认走坏，属于提前预警而非下跌确认。
+    </p>
+    <div class="tldr-grid">
+      <div class="kpi"><div class="v">-1.60%</div><div class="l">VOO 距历史高点 714.53</div></div>
+      <div class="kpi"><div class="v">-1.37%</div><div class="l">QQQM 距历史高点 308.13</div></div>
+      <div class="kpi"><div class="v">5.236%</div><div class="l">10Y 美债（2007年来最高）</div></div>
+      <div class="kpi"><div class="v">70.9%</div><div class="l">10月 Fed 加息概率</div></div>
+    </div>
+    <div class="note">数据来源：westock-data 行情（2026-09-29 盘中）、CME FedWatch（2026-09-29 每经网转引）、新华财经/中国金融信息网（2026-09-28 收盘）</div>
+  </div>
+
+  <!-- 信号矩阵 -->
+  <div class="card">
+    <h2>六项检查清单 · 信号状态</h2>
+    <div class="sig"><span class="dot d-red"></span><b>油价（共振①）</b>
+      <span class="desc">布伦特 ~105 美元/桶（盘中一度 108.8），WTI ~92-93 美元。特朗普拒绝伊朗重开霍尔木兹海峡提议，年内油价累计涨约 75%，柴油价格自冲突爆发涨超 70%，输入性通胀压力直奔核心 PCE。
+      <span class="src">来源：东方财富/新华财经 2026-09-29；金十数据 2026-09-29</span></span></div>
+    <div class="sig"><span class="dot d-red"></span><b>10年美债收益率（共振②）</b>
+      <span class="desc">10Y 收于 5.236%（盘中 5.272%），2007 年 6 月以来最高；30Y 5.547%，2004 年以来最高；连涨 5 日累计上行约 28bp。标普 500 盈利收益率已<b>低于</b> 10Y 收益率——债券对股票的吸引力达约 25 年最高，这是压制估值的最核心变量。
+      <span class="src">来源：中国金融信息网债市日报 2026-09-28；Morningstar/Dow Jones 2026-09-28</span></span></div>
+    <div class="sig"><span class="dot d-red"></span><b>Fed 预期（共振③）</b>
+      <span class="desc">9/16 已加息 25bp 至 3.75%-4.00%（三年首次）。CME FedWatch：10 月再加息 25bp 概率 70.9%，年底前累计加息 50bp 概率 58.7%，年内至少再加息一次概率约 95%；利率互换已定价未来 12 个月三次加息。点阵图 19 人中 16 人预期年内再加。
+      <span class="src">来源：CME FedWatch，每经网 2026-09-29；财联社 2026-09-24（非一手，需核实原文）</span></span></div>
+    <div class="sig"><span class="dot d-red"></span><b>市场广度（共振④，附加信号）</b>
+      <span class="desc">BTIG 统计：标普 500 成分股仅 47.8% 站上 200 日均线，而指数接近 12 个月高点——1990 年以来仅 1998-2000 泡沫期出现过；成分股 52 周新低数量连续 9 天超过新高。典型"指数虚强、个股承压"结构，广度恶化通常先于指数回落。
+      <span class="src">来源：BTIG 研报观点，第一财经转引 2026-09-29（非一手，需核实原文）</span></span></div>
+    <div class="sig"><span class="dot d-amber"></span><b>S&P 500 关键均线</b>
+      <span class="desc">指数 7,678，仍站在 7,645-7,612 关键支撑区（含 50 日均线 ~7,629）上方，但 9/22 小顶 7,782 以来反复受压。均线未破=技术上未确认走坏；跌破则下看 7,565 / 7,506（对应约 -2%~-4%）。
+      <span class="src">来源：Hedgwatch 技术分析 2026-09-23；westock-data K线 2026-09-29</span></span></div>
+    <div class="sig"><span class="dot d-amber"></span><b>宏观数据 + AI 巨头财报窗口（pending，未落地）</b>
+      <span class="desc">本周密集披露：JOLTS、核心 PCE、修正 GDP、9 月非农（预期新增 ~9 万、失业率或升至 4.2%）。8 月 CPI 3.4%、核心 PCE ~3.2%。AI 巨头财报窗口：10/27-29 超级财报周（MSFT/GOOGL 10/27，META/TSLA 10/28，AAPL/AMZN 10/29）+ 英伟达 11/17-18，是本轮 AI 叙事的集中验证点。
+      <span class="src">来源：金十数据 2026-09-29；TipRanks/Wall Street Horizon 2026-09（部分日期为预估，以公司 IR 为准）</span></span></div>
+  </div>
+
+  <!-- 图1：VOO/QQQM 走势 -->
+  <div class="card">
+    <h2>VOO 与 QQQM 近 30 个交易日走势（双轴）</h2>
+    <div id="chartV"></div>
+    <div class="note">来源：westock-data 日K线，2026-08-18 至 2026-09-29 收盘价。VOO 高点 714.53 / QQQM 高点 308.13 均出现在 9/22，之后回落但在 9/29 出现企稳迹象（QQQM 收涨 +0.20%）。</div>
+  </div>
+
+  <!-- 图2+3 -->
+  <div class="card">
+    <h2>美债收益率曲线与 Fed 加息概率</h2>
+    <div id="chartY"></div>
+    <div class="note">来源：中国金融信息网债市日报，2026-09-28 收盘（10Y 盘中最高 5.272%）。</div>
+    <div id="chartFed" style="margin-top:16px;"></div>
+    <div class="note">来源：CME FedWatch，2026-09-29（每经网转引）。当前政策利率区间 3.75%-4.00%。</div>
+  </div>
+
+  <!-- 传导链 -->
+  <div class="card">
+    <h2>本轮风险的传导链</h2>
+    <div class="chain">
+      <span class="node">地缘冲突<br><span style="font-weight:400;font-size:12px">美伊僵局</span></span><span class="arr">→</span>
+      <span class="node">油价 &gt;100 美元</span><span class="arr">→</span>
+      <span class="node">通胀预期回升<br><span style="font-weight:400;font-size:12px">核心PCE ~3.2%</span></span><span class="arr">→</span>
+      <span class="node">Fed 重启加息<br><span style="font-weight:400;font-size:12px">10月概率 70.9%</span></span><span class="arr">→</span>
+      <span class="node">10Y 收益率 &gt;5.2%</span><span class="arr">→</span>
+      <span class="node">估值承压<br><span style="font-weight:400;font-size:12px">盈利收益率&lt;10Y</span></span><span class="arr">→</span>
+      <span class="node">高久期资产回撤<br><span style="font-weight:400;font-size:12px">QQQM 波动&gt;VOO</span></span>
+    </div>
+    <p class="note" style="margin-top:8px;">一阶冲击：利率敏感的纳指100/成长股（QQQM 持有者感受更明显）；二阶冲击：若融资成本挤压企业行为（超大规模厂商发债潮 + AI 资本开支超 1.2 万亿美元），财报季的资本开支指引会成为验证点。历史统计（过去 25 年三轮加息周期）：首次加息后 3 个月内标普 500 平均峰谷回撤约 11%、纳指约 17%（来源：Morgan Stanley 观点，腾讯自选股转引 2026-09-29，非一手需核实）。</p>
+  </div>
+
+  <!-- AI 巨头快照 -->
+  <div class="card">
+    <h2>AI 巨头行情快照与财报日历</h2>
+    <table>
+      <thead><tr><th>公司</th><th>代码</th><th>现价($)</th><th>近5日</th><th>YTD</th><th>PE(TTM)</th><th>财报日（美东盘后）</th></tr></thead>
+      <tbody>
+        <tr><td>英伟达</td><td>NVDA</td><td>229.92</td><td class="up">+0.46%</td><td class="up">+23.58%</td><td>29.1</td><td>11/17（已确认）</td></tr>
+        <tr><td>微软</td><td>MSFT</td><td>504.28</td><td class="up">+1.26%</td><td class="up">+4.94%</td><td>28.1</td><td>10/27</td></tr>
+        <tr><td>苹果</td><td>AAPL</td><td>333.20</td><td class="down">-1.93%</td><td class="up">+22.89%</td><td>38.2</td><td>10/29（已确认）</td></tr>
+        <tr><td>谷歌-A</td><td>GOOGL</td><td>339.75</td><td class="down">-3.25%</td><td class="up">+8.75%</td><td>17.1</td><td>10/27（部分源 10/28）</td></tr>
+        <tr><td>Meta</td><td>META</td><td>721.07</td><td class="down">-2.11%</td><td class="up">+9.52%</td><td>27.2</td><td>10/28（部分源 11/4）</td></tr>
+        <tr><td>亚马逊</td><td>AMZN</td><td>245.37</td><td class="down">-3.77%</td><td class="up">+6.30%</td><td>19.7</td><td>10/29</td></tr>
+        <tr><td>特斯拉</td><td>TSLA</td><td>353.35</td><td class="down">-6.74%</td><td class="down">-21.43%</td><td>327.2</td><td>10/28</td></tr>
+      </tbody>
+    </table>
+    <div class="note">行情来源：westock-data 2026-09-29 收盘；财报日期来源：TipRanks / Wall Street Horizon / FinanceCalendar（Meta、亚马逊、英伟达部分为预估口径，以公司 IR 公告为准）。注意板块内部分化信号：上季度 Meta 是七巨头中唯一归母净利同比下滑的（-13.6%，AI 资本开支侵蚀利润），谷歌/亚马逊单季自由现金流转负——"谁在赚钱、谁在烧钱"正在取代"AI 是否见顶"成为新的叙事主线。</div>
+  </div>
+
+  <!-- 观点与观察清单 -->
+  <div class="card">
+    <h2>判断与观察清单</h2>
+    <p style="font-size:14.5px;">
+      <b>我的判断：</b>这是"风险升级早期"，不是"下跌确认"。指数仍在高位横盘消化，4 个信号共振更多是在<b>定价端</b>（贴现率）而非<b>盈利端</b>——企业盈利目前仍然强劲（英伟达营收同比 +106%，并刚宣布 1,500 亿美元回购授权）。只要盈利端不塌，浅回撤演变成 5%-10% 调整需要触发条件；反过来，Morgan Stanley 的 Wilson 甚至认为一次适度回调反而为年底行情创造条件，JPM 交易台已重新翻多。
+      <b>市场尚未充分定价的一点：</b>广度极端恶化意味着一旦调整开始，更可能以"普跌"形式出现而非板块轮动消化——BTIG 统计纽交所已 213 个交易日未出现下跌成交量占比超 80% 的恐慌日，正常年份平均有 21 天。<br><br>
+      <b>反向声音（可能错在哪）：</b>如果本周 PCE/非农偏温和、或美伊谈判取得实质进展压回油价，加息预期会快速降温（9 月内 10 月加息概率就在 53%~75% 之间反复摆动过），届时"共振"可能在两周内自行瓦解——历史上债市对单次 PMI 的反应经常被证明是超调。
+    </p>
+    <div class="cond">
+      <b>升级触发条件（满足任意两条则风险等级上调至"高"）：</b><br>
+      ① 标普 500 收盘跌破 7,612（50 日均线支撑区下沿）；<br>
+      ② 10Y 美债收益率有效站上 5.25%（技术上看向 5.6%-5.9%）；<br>
+      ③ 核心 PCE 环比 ≥0.3% 且非农 &gt;20 万（强化加息）；<br>
+      ④ VOO 或 QQQM 回撤扩至 -5% 以上。<br>
+      <b>降级条件：</b>油价回落至 90 美元下方（布伦特）+ 10 月加息概率降至 50% 以下 → 回落至"低-中"。
+    </div>
+    <table style="margin-top:14px;">
+      <thead><tr><th>时间窗口</th><th>事件</th><th>关注点</th></tr></thead>
+      <tbody>
+        <tr><td>本周（9/29-10/3）</td><td>JOLTS / 核心 PCE / 修正 GDP / 9 月非农</td><td>PCE 环比是否 0.4%、非农是否 &gt;预期（~9万）</td></tr>
+        <tr><td>10/27-28</td><td>FOMC 议息（北京时间 10/29 凌晨 2:00 公布）</td><td>加息 25bp 后的措辞：还有没有第三次</td></tr>
+        <tr><td>10/27-29</td><td>MSFT / GOOGL / META / TSLA / AAPL / AMZN 财报</td><td>资本开支指引 + 自由现金流（估值分歧核心）</td></tr>
+        <tr><td>11/17-18</td><td>英伟达 FY2027 Q3 财报</td><td>数据中心增速、毛利率（市场预期降至 72% 以下）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="disclaim">
+    <b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。<br><br>
+    数据说明：行情与宏观数据来自 westock-data / NeoData（2026-09-29 盘中）、CME FedWatch（2026-09-29）、新华财经（2026-09-28）；研报与媒体观点（BTIG、Morgan Stanley、JPM）为转引口径，需核实原文。ETF 报价为盘中数据，可能有延迟；财报日期以公司 IR 公告为准。
+  </div>
+
+</div>
+
+<script>
+var vooDates = ['08-18','08-19','08-20','08-21','08-24','08-25','08-26','08-27','08-28','08-31','09-01','09-02','09-03','09-04','09-08','09-09','09-10','09-11','09-14','09-15','09-16','09-17','09-18','09-21','09-22','09-23','09-24','09-25','09-28','09-29'];
+var vooClose = [705.40,706.91,701.01,703.71,701.83,704.02,704.20,708.75,707.24,704.89,700.28,703.41,710.72,708.01,704.07,700.87,696.65,702.56,699.30,696.20,693.24,701.03,701.78,712.78,712.78,707.60,706.99,710.79,703.61,703.06];
+var qqqmClose = [295.45,294.85,292.79,293.76,290.81,292.66,292.90,296.92,295.00,295.18,291.40,292.02,295.51,296.07,295.76,294.97,291.80,294.39,292.02,290.09,290.20,295.20,296.91,305.27,307.78,305.14,305.14,306.54,303.29,303.91];
+
+echarts.init(document.getElementById('chartV')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['VOO', 'QQQM'] },
+  grid: { left: 60, right: 60, bottom: 40 },
+  xAxis: { type: 'category', data: vooDates },
+  yAxis: [
+    { type: 'value', name: 'VOO($)', min: 685, max: 720 },
+    { type: 'value', name: 'QQQM($)', min: 285, max: 312 }
+  ],
+  series: [
+    { name: 'VOO', type: 'line', yAxisIndex: 0, data: vooClose, showSymbol: false, lineStyle: { width: 2, color: '#1e40af' }, color: '#1e40af' },
+    { name: 'QQQM', type: 'line', yAxisIndex: 1, data: qqqmClose, showSymbol: false, lineStyle: { width: 2, color: '#c2410c' }, color: '#c2410c' }
+  ]
+});
+
+echarts.init(document.getElementById('chartY')).setOption({
+  tooltip: { trigger: 'axis' },
+  grid: { left: 60, right: 30, bottom: 40 },
+  xAxis: { type: 'category', data: ['2年期', '3年期', '5年期', '10年期', '30年期'] },
+  yAxis: { type: 'value', name: '收益率(%)', min: 4.5, max: 5.8 },
+  series: [
+    { name: '收益率', type: 'bar', barWidth: '45%', data: [4.931, 5.006, 5.070, 5.236, 5.547],
+      itemStyle: { color: '#1e40af' },
+      label: { show: true, position: 'top', formatter: '{c}%' } }
+  ]
+});
+
+echarts.init(document.getElementById('chartFed')).setOption({
+  tooltip: { trigger: 'axis' },
+  grid: { left: 60, right: 30, bottom: 60 },
+  xAxis: { type: 'category', data: ['10月加息25bp', '10月按兵不动', '12月累计+25bp', '12月累计+50bp'], axisLabel: { rotate: 15 } },
+  yAxis: { type: 'value', name: '概率(%)', max: 100 },
+  series: [
+    { name: '市场定价概率', type: 'bar', barWidth: '45%', data: [70.9, 29.1, 36.3, 58.7],
+      itemStyle: { color: '#b45309' },
+      label: { show: true, position: 'top', formatter: '{c}%' } }
+  ]
+});
+</script>
+</body>
+</html>
